@@ -1,24 +1,28 @@
 class ApartmentsController < ApplicationController
 
-
+    before_action :find_apartment, only: [:update, :destroy]
     #GET /apartments
     def index
         render json: Apartment.all
     end
 
 
-    #POST /apartments
+    #POST /apartment
     def create
-        apartment = Apartment.create!(params[:number])
+        apartment = Apartment.create!(params_permit)
         render json: apartment, status: :created
     end
 
     #PATCH /apartments/:id
     def update
+        @apartment.update!(params_permit)
+        render json: @apartment, status: :accepted
     end
 
     #DELETE /apartments/:id
     def destroy
+        @apartment.destroy
+        head :no_content
     end
 
     private
@@ -27,9 +31,9 @@ class ApartmentsController < ApplicationController
         @apartment = Apartment.find(params[:id]) 
     end
 
-    # def params_permit
-    #     params.permit(:number)
-    # end
+    def params_permit
+        params.permit(:number)
+    end
 
 
 
